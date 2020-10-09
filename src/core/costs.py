@@ -4,8 +4,6 @@ costs.py: contains all cost functions (and related helper functions) for spectra
 
 from keras import backend as K
 import numpy as np
-from keras.backend.tensorflow_backend import expand_dims
-from sklearn.neighbors import NearestNeighbors
 import tensorflow as tf
 
 def squared_distance(X, Y=None, W=None):
