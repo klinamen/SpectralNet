@@ -47,7 +47,7 @@ def run_net(data, params):
     #
 
     # create true y placeholder (not used in unsupervised training)
-    y_true = tf.placeholder(tf.float32, shape=(None, params['n_clusters']), name='y_true')
+    y_true = tf.compat.v1.placeholder(tf.float32, shape=(None, params['n_clusters']), name='y_true')
 
     batch_sizes = {
             'Unlabeled': params['batch_size'],
