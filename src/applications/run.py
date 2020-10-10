@@ -9,6 +9,9 @@ import sys, os
 # add directories in src/ to path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__),'..')))
 
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
+
 import argparse
 from collections import defaultdict
 

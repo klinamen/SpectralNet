@@ -5,7 +5,6 @@ costs.py: contains all cost functions (and related helper functions) for spectra
 from tensorflow.compat.v1.keras import backend as K
 import numpy as np
 import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
 
 def squared_distance(X, Y=None, W=None):
     '''

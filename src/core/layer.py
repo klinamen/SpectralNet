@@ -3,8 +3,6 @@ layer.py: contains functions used to build all spectral and siamese net models
 '''
 
 import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
-
 from tensorflow.compat.v1.keras.layers import Dense, BatchNormalization, Flatten, Conv2D, MaxPooling2D, Lambda, Dropout
 from tensorflow.compat.v1.keras import backend as K
 

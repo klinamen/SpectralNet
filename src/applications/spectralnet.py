@@ -4,7 +4,6 @@ spectralnet.py: contains run function for spectralnet
 import os
 
 import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
 
 import numpy as np
 

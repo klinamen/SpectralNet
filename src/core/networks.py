@@ -5,7 +5,6 @@ triplet siamese net, and spectralnet)
 
 import numpy as np
 import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
 
 from tensorflow.compat.v1.keras import backend as K
 from tensorflow.compat.v1.keras.models import Model
