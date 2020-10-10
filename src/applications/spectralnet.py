@@ -90,19 +90,6 @@ def train_net(data, params):
         params['spec_ne'])
 
     print("finished training")
-    return spectral_net
-
-def run_net(data, params):
-    spectral_net = train_net(data, params)
-
-    #
-    # UNPACK DATA
-    #
-
-    x_train, y_train, x_val, y_val, x_test, y_test = data['spectral']['train_and_test']
-    x_train_unlabeled, y_train_unlabeled, x_train_labeled, y_train_labeled = data['spectral']['train_unlabeled_and_labeled']
-    x = np.concatenate((x_train, x_val, x_test), axis=0)
-    y = np.concatenate((y_train, y_val, y_test), axis=0)
 
     #
     # EVALUATE
@@ -130,5 +117,34 @@ def run_net(data, params):
         nmi_score = nmi(closest_cluster, y_test)
         print('generalization NMI: ' + str(np.round(nmi_score, 3)))
 
+    return spectral_net
+
+
+def run_net(data, params):
+    x, y = unpack_data(data)
+
+    spectral_net = train_net(data, params)
+    x_spectralnet, y_spectralnet = predict(spectral_net, x, y, params['n_clusters'])
+
     return x_spectralnet, y_spectralnet
 
+
+def unpack_data(data):
+    #
+    # UNPACK DATA
+    #
+
+    x_train, y_train, x_val, y_val, x_test, y_test = data['spectral']['train_and_test']
+    x = np.concatenate((x_train, x_val, x_test), axis=0)
+    y = np.concatenate((y_train, y_val, y_test), axis=0)
+
+    return x, y
+
+
+def predict(spectral_net, x, y, n_clusters):
+    x_spectralnet = spectral_net.predict(x)
+
+    kmeans_assignments, km = get_cluster_sols(x_spectralnet, ClusterClass=KMeans, n_clusters=n_clusters, init_args={'n_init':10})
+    y_spectralnet, _ = get_y_preds(kmeans_assignments, y, n_clusters)
+
+    return x_spectralnet, y_spectralnet
