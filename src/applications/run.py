@@ -9,14 +9,22 @@ import sys, os
 # add directories in src/ to path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__),'..')))
 
-import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
+import tensorflow as tf
+tf.compat.v1.disable_v2_behavior()
+tf.compat.v1.enable_resource_variables()
+
+# tf.compat.v1.debugging.experimental.enable_dump_debug_info(
+#     dump_root="/tmp/tfdbg2_logdir",
+#     tensor_debug_mode="FULL_HEALTH",
+#     circular_buffer_size=-1)
 
 import argparse
 from collections import defaultdict
 
 from core.data import get_data
 from spectralnet import run_net
+
+
 
 # PARSE ARGUMENTS
 parser = argparse.ArgumentParser()

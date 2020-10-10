@@ -17,7 +17,8 @@ from tensorflow.compat.v1.keras.layers import Input
 from core import networks
 from core.util import print_accuracy, get_cluster_sols, get_y_preds
 
-def run_net(data, params):
+
+def train_net(data, params):
     #
     # UNPACK DATA
     #
@@ -45,19 +46,19 @@ def run_net(data, params):
     y_true = tf.placeholder(tf.float32, shape=(None, params['n_clusters']), name='y_true')
 
     batch_sizes = {
-            'Unlabeled': params['batch_size'],
-            'Labeled': params['batch_size'],
-            'Orthonorm': params.get('batch_size_orthonorm', params['batch_size']),
-            }
+        'Unlabeled': params['batch_size'],
+        'Labeled': params['batch_size'],
+        'Orthonorm': params.get('batch_size_orthonorm', params['batch_size']),
+    }
 
     input_shape = x.shape[1:]
 
     # spectralnet has three inputs -- they are defined here
     inputs = {
-            'Unlabeled': Input(shape=input_shape,name='UnlabeledInput'),
-            'Labeled': Input(shape=input_shape,name='LabeledInput'),
-            'Orthonorm': Input(shape=input_shape,name='OrthonormInput'),
-            }
+        'Unlabeled': Input(shape=input_shape,name='UnlabeledInput'),
+        'Labeled': Input(shape=input_shape,name='LabeledInput'),
+        'Orthonorm': Input(shape=input_shape,name='OrthonormInput'),
+    }
 
     #
     # DEFINE AND TRAIN SIAMESE NET
@@ -68,8 +69,8 @@ def run_net(data, params):
         siamese_net = networks.SiameseNet(inputs, params['arch'], params.get('siam_reg'), y_true)
 
         history = siamese_net.train(pairs_train, dist_train, pairs_val, dist_val,
-                params['siam_lr'], params['siam_drop'], params['siam_patience'],
-                params['siam_ne'], params['siam_batch_size'])
+                                    params['siam_lr'], params['siam_drop'], params['siam_patience'],
+                                    params['siam_ne'], params['siam_batch_size'])
 
     else:
         siamese_net = None
@@ -79,16 +80,29 @@ def run_net(data, params):
     #
 
     spectral_net = networks.SpectralNet(inputs, params['arch'],
-            params.get('spec_reg'), y_true, y_train_labeled_onehot,
-            params['n_clusters'], params['affinity'], params['scale_nbr'],
-            params['n_nbrs'], batch_sizes, siamese_net, x_train, len(x_train_labeled))
+                                        params.get('spec_reg'), y_true, y_train_labeled_onehot,
+                                        params['n_clusters'], params['affinity'], params['scale_nbr'],
+                                        params['n_nbrs'], batch_sizes, siamese_net, x_train, len(x_train_labeled))
 
     spectral_net.train(
-            x_train_unlabeled, x_train_labeled, x_val_unlabeled,
-            params['spec_lr'], params['spec_drop'], params['spec_patience'],
-            params['spec_ne'])
+        x_train_unlabeled, x_train_labeled, x_val_unlabeled,
+        params['spec_lr'], params['spec_drop'], params['spec_patience'],
+        params['spec_ne'])
 
     print("finished training")
+    return spectral_net
+
+def run_net(data, params):
+    spectral_net = train_net(data, params)
+
+    #
+    # UNPACK DATA
+    #
+
+    x_train, y_train, x_val, y_val, x_test, y_test = data['spectral']['train_and_test']
+    x_train_unlabeled, y_train_unlabeled, x_train_labeled, y_train_labeled = data['spectral']['train_unlabeled_and_labeled']
+    x = np.concatenate((x_train, x_val, x_test), axis=0)
+    y = np.concatenate((y_train, y_val, y_test), axis=0)
 
     #
     # EVALUATE
