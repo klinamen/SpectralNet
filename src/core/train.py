@@ -1,7 +1,7 @@
 '''
 train.py: contains all training and prediction backend functions for spectral net
 '''
-from keras import backend as K
+from tensorflow.compat.v1.keras import backend as K
 from .util import make_batches
 
 import numpy as np

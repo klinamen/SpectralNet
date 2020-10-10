@@ -4,11 +4,12 @@ triplet siamese net, and spectralnet)
 '''
 
 import numpy as np
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 
-from keras import backend as K
-from keras.models import Model
-from keras.layers import Input, Lambda, Subtract
+from tensorflow.compat.v1.keras import backend as K
+from tensorflow.compat.v1.keras.models import Model
+from tensorflow.compat.v1.keras.layers import Input, Lambda, Subtract
 
 from . import train
 from . import costs
@@ -136,6 +137,7 @@ class SpectralNet:
         self.train_step = tf.train.RMSPropOptimizer(learning_rate=self.learning_rate).minimize(self.loss, var_list=self.net.trainable_weights)
 
         # initialize spectralnet variables
+        K.get_session().run(tf.global_variables_initializer())
         K.get_session().run(tf.variables_initializer(self.net.trainable_weights))
 
     def train(self, x_train_unlabeled, x_train_labeled, x_val_unlabeled,

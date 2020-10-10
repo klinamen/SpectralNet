@@ -1,11 +1,15 @@
 '''
 layer.py: contains functions used to build all spectral and siamese net models
 '''
-from keras.layers import Dense, BatchNormalization, Flatten, Conv2D, MaxPooling2D, Lambda, Dropout
-from keras import backend as K
-import tensorflow as tf
+
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
+
+from tensorflow.compat.v1.keras.layers import Dense, BatchNormalization, Flatten, Conv2D, MaxPooling2D, Lambda, Dropout
+from tensorflow.compat.v1.keras import backend as K
+
 import numpy as np
-from keras.regularizers import l2
+from tensorflow.compat.v1.keras.regularizers import l2
 
 def orthonorm_op(x, epsilon=1e-7):
     '''

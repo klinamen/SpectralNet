@@ -1,26 +1,22 @@
 '''
 spectralnet.py: contains run function for spectralnet
 '''
-import sys, os, pickle
-import tensorflow as tf
+import os
+
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
+
 import numpy as np
-import traceback
+
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '0'
 
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import OneHotEncoder
-from sklearn.metrics import normalized_mutual_info_score as nmi
 
-import keras.backend as K
-from keras.models import Model, load_model
-from keras.layers import Input, Lambda
-from keras.optimizers import RMSprop
+from tensorflow.compat.v1.keras.layers import Input
 
-from core import train
-from core import costs
 from core import networks
-from core.layer import stack_layers
-from core.util import get_scale, print_accuracy, get_cluster_sols, LearningHandler, make_layer_list, train_gen, get_y_preds
+from core.util import print_accuracy, get_cluster_sols, get_y_preds
 
 def run_net(data, params):
     #
@@ -47,7 +43,7 @@ def run_net(data, params):
     #
 
     # create true y placeholder (not used in unsupervised training)
-    y_true = tf.compat.v1.placeholder(tf.float32, shape=(None, params['n_clusters']), name='y_true')
+    y_true = tf.placeholder(tf.float32, shape=(None, params['n_clusters']), name='y_true')
 
     batch_sizes = {
             'Unlabeled': params['batch_size'],

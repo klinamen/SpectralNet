@@ -10,9 +10,10 @@ import numpy as np
 from scipy.stats import norm
 import sklearn.metrics
 
-from keras import backend as K
-from keras.callbacks import Callback
-import tensorflow as tf
+from tensorflow.compat.v1.keras import backend as K
+from tensorflow.compat.v1.keras.callbacks import Callback
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 
 from core import costs as cf
 from munkres import Munkres

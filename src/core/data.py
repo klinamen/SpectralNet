@@ -8,9 +8,9 @@ import h5py
 import numpy as np
 from sklearn import preprocessing
 
-from keras import backend as K
-from keras.datasets import mnist
-from keras.models import model_from_json
+from tensorflow.compat.v1.keras import backend as K
+from tensorflow.compat.v1.keras.datasets import mnist
+from tensorflow.compat.v1.keras.models import model_from_json
 
 from core import pairs
 

@@ -2,9 +2,10 @@
 costs.py: contains all cost functions (and related helper functions) for spectral and siamese nets
 '''
 
-from keras import backend as K
+from tensorflow.compat.v1.keras import backend as K
 import numpy as np
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 
 def squared_distance(X, Y=None, W=None):
     '''
